@@ -74,10 +74,18 @@ rustler::init!(
         test_nif_attrs::can_rename,
         test_codegen::reserved_keywords::reserved_keywords_type_echo
     ],
-    load = load
+    load = load,
+    upgrade = upgrade,
+    unload = unload,
 );
 
 fn load(env: rustler::Env, _: rustler::Term) -> bool {
     test_resource::on_load(env);
     true
 }
+
+fn upgrade(_env: rustler::Env, _: rustler::Term) -> bool {
+    false
+}
+
+fn unload(_env: rustler::Env) {}
