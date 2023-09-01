@@ -4,6 +4,7 @@ use crate::{Decoder, Encoder, Env, Error, NifResult, Term};
 macro_rules! impl_number_transcoder {
     ($dec_type:ty, $nif_type:ty, $encode_fun:ident, $decode_fun:ident) => {
         impl Encoder for $dec_type {
+            #[inline]
             fn encode<'a>(&self, env: Env<'a>) -> Term<'a> {
                 #[allow(clippy::cast_lossless)]
                 unsafe {
@@ -15,6 +16,7 @@ macro_rules! impl_number_transcoder {
             }
         }
         impl<'a> Decoder<'a> for $dec_type {
+            #[inline]
             fn decode(term: Term) -> NifResult<$dec_type> {
                 #![allow(unused_unsafe)]
                 let mut res: $nif_type = Default::default();

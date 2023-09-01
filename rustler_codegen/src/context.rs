@@ -20,6 +20,7 @@ pub(crate) struct Context<'a> {
 }
 
 impl<'a> Context<'a> {
+    #[inline]
     pub fn from_ast(ast: &'a syn::DeriveInput) -> Self {
         let mut attrs: Vec<_> = ast
             .attrs
@@ -60,22 +61,26 @@ impl<'a> Context<'a> {
         }
     }
 
+    #[inline]
     pub fn atoms_module_name(&self, span: Span) -> Ident {
         Ident::new(&format!("RUSTLER_ATOMS_{}", self.ident), span)
     }
 
+    #[inline]
     pub fn encode(&self) -> bool {
         self.attrs
             .iter()
             .any(|attr| matches!(attr, RustlerAttr::Encode))
     }
 
+    #[inline]
     pub fn decode(&self) -> bool {
         self.attrs
             .iter()
             .any(|attr| matches!(attr, RustlerAttr::Decode))
     }
 
+    #[inline]
     pub fn field_atoms(&self) -> Option<Vec<TokenStream>> {
         self.struct_fields.as_ref().map(|struct_fields| {
             struct_fields
@@ -95,11 +100,13 @@ impl<'a> Context<'a> {
         })
     }
 
+    #[inline]
     pub fn field_to_atom_fun(field: &Field) -> Ident {
         let ident = field.ident.as_ref().unwrap();
         Self::ident_to_atom_fun(ident)
     }
 
+    #[inline]
     pub fn ident_to_atom_fun(ident: &Ident) -> Ident {
         let ident_str = ident.to_string().to_snake_case();
         let ident_str = Self::remove_raw(&ident_str);
@@ -107,6 +114,7 @@ impl<'a> Context<'a> {
         Ident::new(&format!("atom_{}", ident_str), Span::call_site())
     }
 
+    #[inline]
     pub fn escape_ident_with_index(ident_str: &str, index: usize, infix: &str) -> Ident {
         Ident::new(
             &format!(
@@ -119,6 +127,7 @@ impl<'a> Context<'a> {
         )
     }
 
+    #[inline]
     pub fn escape_ident(ident_str: &str, infix: &str) -> Ident {
         Ident::new(
             &format!("rustler_{}_field_{}", infix, Self::remove_raw(ident_str)),
@@ -126,6 +135,7 @@ impl<'a> Context<'a> {
         )
     }
 
+    #[inline]
     fn remove_raw(ident_str: &str) -> &str {
         ident_str
             .split("r#")
@@ -133,12 +143,14 @@ impl<'a> Context<'a> {
             .expect("split has always at least one element")
     }
 
+    #[inline]
     fn encode_decode_attr_set(attrs: &[RustlerAttr]) -> bool {
         attrs
             .iter()
             .any(|attr| matches!(attr, RustlerAttr::Encode | RustlerAttr::Decode))
     }
 
+    #[inline]
     fn get_rustler_attrs(attr: &syn::Attribute) -> Vec<RustlerAttr> {
         attr.path()
             .segments
@@ -156,6 +168,7 @@ impl<'a> Context<'a> {
             .collect()
     }
 
+    #[inline]
     fn parse_rustler(meta: &Meta) -> Vec<RustlerAttr> {
         if let Meta::List(ref list) = meta {
             let mut attrs: Vec<RustlerAttr> = vec![];
@@ -177,6 +190,7 @@ impl<'a> Context<'a> {
         panic!("Expected encode and/or decode in rustler attribute");
     }
 
+    #[inline]
     fn try_parse_tag(meta: &Meta) -> Option<Vec<RustlerAttr>> {
         if let Meta::NameValue(ref name_value) = meta {
             let expr = &name_value.value;
@@ -190,6 +204,7 @@ impl<'a> Context<'a> {
         panic!("Cannot parse module")
     }
 
+    #[inline]
     fn try_parse_module(meta: &Meta) -> Option<Vec<RustlerAttr>> {
         if let Meta::NameValue(name_value) = meta {
             let expr = &name_value.value;

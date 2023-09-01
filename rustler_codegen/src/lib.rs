@@ -130,6 +130,7 @@ pub fn nif(args: TokenStream, input: TokenStream) -> TokenStream {
 /// such that you can use the Elixir struct definition for it.
 
 #[proc_macro_derive(NifStruct, attributes(module, rustler))]
+#[inline]
 pub fn nif_struct(input: TokenStream) -> TokenStream {
     let ast = syn::parse(input).unwrap();
     ex_struct::transcoder_decorator(&ast, false).into()

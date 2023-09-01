@@ -40,6 +40,7 @@ impl<'a> Env<'a> {
     ///
     /// # Unsafe
     /// Don't create multiple `Env`s with the same lifetime.
+    #[inline]
     pub unsafe fn new<T>(_lifetime_marker: &'a T, env: NIF_ENV) -> Env<'a> {
         Env {
             env,
@@ -47,11 +48,13 @@ impl<'a> Env<'a> {
         }
     }
 
+    #[inline]
     pub fn as_c_arg(self) -> NIF_ENV {
         self.env
     }
 
     /// Convenience method for building a tuple `{error, Reason}`.
+    #[inline]
     pub fn error_tuple<T>(self, reason: T) -> Term<'a>
     where
         T: Encoder,
@@ -76,6 +79,7 @@ impl<'a> Env<'a> {
     /// Panics if the above rules are broken (by trying to send a message from
     /// an `OwnedEnv` on a thread that's managed by the Erlang VM).
     ///
+    #[inline]
     pub fn send(self, pid: &LocalPid, message: Term<'a>) {
         let thread_type = unsafe { rustler_sys::enif_thread_type() };
         let env = if thread_type == rustler_sys::ERL_NIF_THR_UNDEFINED {

@@ -99,10 +99,12 @@ pub unsafe fn map_iterator_get_pair(
     }
 }
 
+#[inline]
 pub unsafe fn map_iterator_next(env: NIF_ENV, iter: &mut ErlNifMapIterator) {
     rustler_sys::enif_map_iterator_next(env, iter);
 }
 
+#[inline]
 pub unsafe fn make_map_from_arrays(
     env: NIF_ENV,
     keys: &[NIF_TERM],
